@@ -87,6 +87,9 @@ if __name__ == "__main__":
       print('[ {} tickets found on Jenkins ]'.format(len(jenkins_tickets)), end='\n\n')
    else:
       print('[ no tickets found on Jenkins -- are you sure the page is up? ]')
-   # print overlap of jenkins tickets and jira tickets 
+   # print overlap of jenkins tickets and jira tickets
+   ready_tickets = jenkins_tickets.intersection(jira_tickets)
+   if not ready_tickets:
+      print('[ no work-ready tickets! ]') 
    for ticket in jenkins_tickets.intersection(jira_tickets): 
       print('Ready: ', JIRA_BROWSER_URL_BASE + ticket) 
