@@ -58,7 +58,7 @@ def get_jenkins_tickets(*jenkins_urls):
          
 if __name__ == "__main__":
    # debug mode flag as command line argument
-   DEBUG = len(sys.argv) > 1 and sys.argv[-1] in ['-debug', '--debug']
+   DEBUG = len(sys.argv) > 1 and sys.argv[-1] in ['-d','-debug', '--debug']
    if DEBUG:
       print('[ debug enabled ]')
    # get JIRA credentials
@@ -88,5 +88,6 @@ if __name__ == "__main__":
    else:
       print('[ no tickets found on Jenkins -- are you sure the page is up? ]')
    # print overlap of jenkins tickets and jira tickets
+   print('[ Issues fixed on QE ]')
    for ticket in jenkins_tickets.intersection(jira_tickets): 
-      print('issues fixed on QE: ', JIRA_BROWSER_URL_BASE + ticket) 
+      print(JIRA_BROWSER_URL_BASE + ticket) 
