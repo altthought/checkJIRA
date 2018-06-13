@@ -58,7 +58,9 @@ def get_jenkins_tickets(*jenkins_urls):
          
 if __name__ == "__main__":
    # debug mode flag as command line argument
-   DEBUG = len(sys.argv) > 1 and sys.argv[-1] in ['-d','-debug', '--debug']
+   DEBUG = len(sys.argv) > 1 and sys.argv[-1] in ('-d','-debug', '--debug')
+   #WRITE = len(sys.argv) > 1 and any(('-w','--write')) in sys.argv
+   #print(WRITE)
    if DEBUG:
       print('[ debug enabled ]')
    # get JIRA credentials
