@@ -56,40 +56,24 @@ def get_jenkins_tickets(*jenkins_urls):
    # return unique tickets built on QE 
    return jenkins_tickets
          
-if __name__ == "__main__":
-   # debug mode flag as command line argument
-   DEBUG = len(sys.argv) > 1 and sys.argv[-1] in ('-d','-debug', '--debug')
-   if DEBUG:
-      print('[ debug enabled ]')
-   
+if __name__ == "__main__": 
    # get JIRA credentials
    username = input('username: ') 
    password = getpass('password: ')  
-   
-   # check JIRA
-   jira_url = JIRA_REST_URL_BASE + JIRA_QUERY_TEMPLATE.format(u=username)  
-   
-   # get 'resolved' Mercury JIRA tickets and check against QE  
+
+   # get 'resolved' Mercury JIRA tickets and check against QE   
    print('Checking JIRA...')
+   jira_url = JIRA_REST_URL_BASE + JIRA_QUERY_TEMPLATE.format(u=username)  
    jira_tickets = get_jira_tickets(jira_url,username,password)  
-   
-   if DEBUG:
-      for ticket in jira_tickets:
-         print('JIRA Ticket:',ticket)
-   
+     
    if jira_tickets:
-      print('[ {} assigned JIRA tickets found ]'.format(len(jira_tickets)), end='\n\n')
+      print('[ {} assigned JIRA tickets found ]\n\n'.format( len(jira_tickets) )) 
    else:
       print(f'[ No tickets assigned to "{username}" by that query ]')
-      sys.exit(1) # skip slow jenkins parsing if you have no assigned tickets  
+      sys.exit(1) # skip slow jenkins check if you have no assigned tickets  
    
    print('Checking Jenkins changelog...') 
    jenkins_tickets = get_jenkins_tickets(MERCURYSERVER_QE_URL,MERCURYFRAMEWORK_QE_URL)
-   
-   if DEBUG:
-      for ticket in jenkins_tickets:
-         print('Jenkins Ticket:',ticket)
-      print('[ end of Jenkins tickets ]')
    
    if jenkins_tickets:
       print('[ {} tickets found on Jenkins ]'.format(len(jenkins_tickets)), end='\n\n')
