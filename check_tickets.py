@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Author: Alex Culp
-# Version: 0.3.0 (release)
+# Version: 0.3.0 
 
 from getpass import getpass
 from json.decoder import JSONDecodeError
@@ -59,38 +59,45 @@ def get_jenkins_tickets(*jenkins_urls):
 if __name__ == "__main__":
    # debug mode flag as command line argument
    DEBUG = len(sys.argv) > 1 and sys.argv[-1] in ('-d','-debug', '--debug')
-   #WRITE = len(sys.argv) > 1 and any(('-w','--write')) in sys.argv
-   #print(WRITE)
    if DEBUG:
       print('[ debug enabled ]')
+   
    # get JIRA credentials
    username = input('username: ') 
    password = getpass('password: ')  
+   
    # check JIRA
    jira_url = JIRA_REST_URL_BASE + JIRA_QUERY_TEMPLATE.format(u=username)  
+   
    # get 'resolved' Mercury JIRA tickets and check against QE  
    print('Checking JIRA...')
    jira_tickets = get_jira_tickets(jira_url,username,password)  
+   
    if DEBUG:
       for ticket in jira_tickets:
          print('JIRA Ticket:',ticket)
+   
    if jira_tickets:
       print('[ {} assigned JIRA tickets found ]'.format(len(jira_tickets)), end='\n\n')
    else:
       print(f'[ No tickets assigned to "{username}" by that query ]')
       sys.exit(1) # skip slow jenkins parsing if you have no assigned tickets  
+   
    print('Checking Jenkins changelog...') 
    jenkins_tickets = get_jenkins_tickets(MERCURYSERVER_QE_URL,MERCURYFRAMEWORK_QE_URL)
+   
    if DEBUG:
       for ticket in jenkins_tickets:
          print('Jenkins Ticket:',ticket)
       print('[ end of Jenkins tickets ]')
+   
    if jenkins_tickets:
       print('[ {} tickets found on Jenkins ]'.format(len(jenkins_tickets)), end='\n\n')
    else:
       print('[ no tickets found on Jenkins -- are you sure the page is up? ]')
    # print overlap of jenkins tickets and jira tickets
    ready_tickets = jenkins_tickets.intersection(jira_tickets)
+   
    if not ready_tickets:
       print('[ no work-ready tickets! ]') 
    for ticket in jenkins_tickets.intersection(jira_tickets): 
