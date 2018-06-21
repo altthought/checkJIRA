@@ -6,7 +6,7 @@ from getpass import getpass
 from json.decoder import JSONDecodeError
 from requests_html import HTMLSession
 from requests.exceptions import ConnectionError
-import sys
+from sys import exit
 import json
 import re
 
@@ -31,10 +31,10 @@ def get_jira_tickets(url, user, pw):
       return {ticket['key'] for ticket in tickets['issues']}  
    except JSONDecodeError as j:
       print('Check JIRA credentials or JQL query string\n', j.args)
-      sys.exit(1) # json exception hangs, need to manually exit
+      exit(1) # json exception hangs, need to manually exit
    except ConnectionError as c:
       print('Check that JIRA is up', j.args)
-      sys.exit(1) # connection error hangs, manual exit
+      exit(1) # connection error hangs, manual exit
 
 def get_jenkins_tickets(*jenkins_urls):    
    patt = re.compile('[hH][gG]-?(\d+)')
@@ -52,7 +52,7 @@ def get_jenkins_tickets(*jenkins_urls):
                jenkins_tickets.add('HG-' + match.group(1))
       except ConnectionError as c:
          print("Check VPN connection, Jenkins appears down\n\n",c.args)
-         sys.exit(1) # NOTE do not continue if VPN drops -- very slow drop
+         exit(1) # NOTE do not continue if VPN drops -- very slow drop
    # return unique tickets built on QE 
    return jenkins_tickets
          
@@ -70,7 +70,7 @@ if __name__ == "__main__":
       print('[ {} assigned JIRA tickets found ]\n\n'.format( len(jira_tickets) )) 
    else:
       print(f'[ No tickets assigned to "{username}" by that query ]')
-      sys.exit(1) # skip slow jenkins check if you have no assigned tickets  
+      exit(1) # skip slow jenkins check if you have no assigned tickets  
    
    print('Checking Jenkins changelog...') 
    jenkins_tickets = get_jenkins_tickets(MERCURYSERVER_QE_URL,MERCURYFRAMEWORK_QE_URL)
