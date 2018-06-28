@@ -51,7 +51,7 @@ def get_jenkins_tickets(*jenkins_urls):
                # force formatting to HG-XXXX to match JIRA
                jenkins_tickets.add('HG-' + match.group(1))
       except ConnectionError as c:
-         print("Check VPN connection, Jenkins appears down\n\n",c.args)
+         print("\nCheck VPN connection, Jenkins appears down")
          exit(1) # NOTE do not continue if VPN drops -- very slow drop
    # return unique tickets built on QE 
    return jenkins_tickets
