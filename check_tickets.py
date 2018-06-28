@@ -67,7 +67,7 @@ if __name__ == "__main__":
    jira_tickets = get_jira_tickets(jira_url,username,password)  
      
    if jira_tickets:
-      print('[ {} assigned JIRA tickets found ]\n\n'.format( len(jira_tickets) )) 
+      print('[ {} assigned JIRA tickets found ]\n'.format( len(jira_tickets) )) 
    else:
       print(f'[ No tickets assigned to "{username}" by that query ]')
       exit(1) # skip slow jenkins check if you have no assigned tickets  
