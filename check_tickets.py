@@ -83,6 +83,6 @@ if __name__ == "__main__":
    ready_tickets = jenkins_tickets.intersection(jira_tickets)
    
    if not ready_tickets:
-      print('[ no work-ready tickets! ]') 
+      print('[ no work-ready tickets ]') 
    for ticket in jenkins_tickets.intersection(jira_tickets): 
       print('Ready: ', JIRA_BROWSER_URL_BASE + ticket) 
