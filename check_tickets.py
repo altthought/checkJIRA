@@ -6,9 +6,9 @@ from getpass import getpass
 from json.decoder import JSONDecodeError
 from requests_html import HTMLSession
 from requests.exceptions import ConnectionError
-from sys import exit
 import json
 import re
+import sys
 
 # JIRA base URLs 
 JIRA_REST_URL_BASE    = 'https://resource.marketo.com/jira/rest/api/latest/search?jql='
@@ -31,10 +31,10 @@ def get_jira_tickets(url, user, pw):
       return {ticket['key'] for ticket in tickets['issues']}  
    except JSONDecodeError as j:
       print('Check JIRA credentials or JQL query string\n', j.args)
-      exit(1) # json exception hangs, need to manually exit
+      sys.exit(1) # json exception hangs, need to manually exit
    except ConnectionError as c:
       print('Check that JIRA is up', j.args)
-      exit(1) # connection error hangs, manual exit
+      sys.exit(1) # connection error hangs, manual exit
 
 def get_jenkins_tickets(*jenkins_urls):    
    patt = re.compile('[hH][gG]-?(\d+)')
@@ -52,7 +52,7 @@ def get_jenkins_tickets(*jenkins_urls):
                jenkins_tickets.add('HG-' + match.group(1))
       except ConnectionError as c:
          print("\nCheck VPN connection, Jenkins appears down")
-         exit(1) # NOTE do not continue if VPN drops -- very slow drop
+         sys.exit(1) # NOTE do not continue if VPN drops -- very slow drop
    # return unique tickets built on QE 
    return jenkins_tickets
          
@@ -65,12 +65,11 @@ if __name__ == "__main__":
    print('Checking JIRA...')
    jira_url = JIRA_REST_URL_BASE + JIRA_QUERY_TEMPLATE.format(u=username)  
    jira_tickets = get_jira_tickets(jira_url,username,password)  
-     
-   if jira_tickets:
-      print('[ {} assigned JIRA tickets found ]\n'.format( len(jira_tickets) )) 
-   else:
-      print(f'[ No tickets assigned to "{username}" by that query ]')
-      exit(1) # skip slow jenkins check if you have no assigned tickets  
+ 
+   print('[ {} assigned JIRA tickets found ]\n'.format( len(jira_tickets) )) 
+   if not jira_tickets:
+       # do not wait for slow jenkins search, just exit.
+       sys.exit(1)
    
    print('Checking Jenkins changelog...') 
    jenkins_tickets = get_jenkins_tickets(MERCURYSERVER_QE_URL,MERCURYFRAMEWORK_QE_URL)
