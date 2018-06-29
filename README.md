@@ -24,13 +24,6 @@ python3 -m pip install -r requirements.txt
 python3 check_tickets.py
 ```
 
-### Extras
-
-- `[--debug, -d]` flag
-   - prints all assigned JIRA tickets and all QE Jenkins tickets
-- `[--write <filename>, -w <filename>]` flag
-   - writes output cleanly to external HTML file with hyperlinks
-   - ignored when combined with `--debug` flag
 
 ### Limitations
 
