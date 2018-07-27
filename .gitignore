@@ -1,6 +1,6 @@
 # vim swap files
 *.swp
 
-# python environment garbage
+# python environment
 __pycache__/
 venv/

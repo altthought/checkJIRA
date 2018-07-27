@@ -49,7 +49,7 @@ def get_jira_tickets(url, user, pw):
     *************************************
     """
     try:
-        print('Checking JIRA...')
+        print('Checking: JIRA...')
         jira_request = HTMLSession().get(url, auth=(user,pw))
         tickets = json.loads(jira_request.text) 
         # get _unique_ set of HG-#### ticket keys
