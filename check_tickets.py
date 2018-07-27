@@ -1,87 +1,94 @@
 #!/usr/bin/env python3
 # Author: Alex Culp
-# Version: 0.3.0 
+# Version: 0.4.1
 
 from getpass import getpass
-from json.decoder import JSONDecodeError
 from requests_html import HTMLSession
-from requests.exceptions import ConnectionError
+from json.decoder import JSONDecodeError
+from requests.exceptions import ConnectionError 
 import json
 import re
 import sys
 
-# JIRA base URLs 
-JIRA_REST_URL_BASE    = 'https://resource.marketo.com/jira/rest/api/latest/search?jql='
-JIRA_BROWSER_URL_BASE = 'https://resource.marketo.com/jira/browse/'
-
-# Mercury 'resolved' tickets assigned to netID "u" (template)
-JIRA_QUERY_TEMPLATE = '(reporter={u} or assignee={u} or verifier={u}) ' \
-                      'and project=HG and status=resolved'
-
-# Jenkins URLs for parsing
-MERCURYSERVER_QE_URL    = 'http://sjbuild2.marketo.org:8080/job/MercuryServer-QE/changes'
-MERCURYFRAMEWORK_QE_URL = 'http://sjbuild2.marketo.org:8080/job/MercuryFramework-QE/changes'
+def get_jenkins_tickets(*jenkins_urls):
+    """
+    Given Jenkins changelog URL, returns set of JIRA tickets mentioned in builds
+    """
+    jenkins_tickets = set()
+    jira_pattern = re.compile(r'[hH][gG][\s-]?(\d+)')
+    # go through ServerQE, then FrameworkQE
+    for jenkins_url in jenkins_urls:
+        print(f'Checking: {jenkins_url}...')
+        try:
+            # grab individual build URLs from the main changelog page 
+            changelog_json = json.loads(HTMLSession().get(jenkins_url).text)
+        except ConnectionError as c:
+            print('Check VPN connection! Exiting...\n', c.args)
+            sys.exit(1) # VPN necessary to grab ticket information!
+        build_urls = [build['url'] for build in changelog_json['builds']]
+        # go through individual builds
+        for build_url in build_urls: 
+            build_data = json.loads(HTMLSession().get(f'{build_url}/api/json').text)
+            # need change count per build to search messages
+            change_count = len(build_data['changeSet']['items'])
+            # check each change for a JIRA ticket reference
+            for change in range(change_count):
+                msg = build_data['changeSet']['items'][change]['msg']
+                match = jira_pattern.search(msg) 
+                # search changelog message for JIRA ticket
+                if match:
+                    # force formatting to HG-XXXX to match JIRA
+                    jenkins_tickets.add('HG-' + match.group(1))
+    return jenkins_tickets
 
 def get_jira_tickets(url, user, pw):  
-   # NOTE: THIS IS _NOT_ SECURE AUTH! 
-   jira_request = HTMLSession().get(url, auth=(user,pw))
-   try:
-      tickets = json.loads(jira_request.text) 
-      # get _unique_ set of HG-#### ticket keys
-      return {ticket['key'] for ticket in tickets['issues']}  
-   except JSONDecodeError as j:
-      print('Check JIRA credentials or JQL query string\n', j.args)
-      sys.exit(1) # json exception hangs, need to manually exit
-   except ConnectionError as c:
-      print('Check that JIRA is up', j.args)
-      sys.exit(1) # connection error hangs, manual exit
+    """ 
+    Grab tickets from JIRA query URL (JQL)
+    *************************************
+    *  NOTE: THIS IS _NOT_ SECURE AUTH! *
+    *************************************
+    """
+    try:
+        print('Checking JIRA...')
+        jira_request = HTMLSession().get(url, auth=(user,pw))
+        tickets = json.loads(jira_request.text) 
+        # get _unique_ set of HG-#### ticket keys
+        return {ticket['key'] for ticket in tickets['issues']}  
+    except JSONDecodeError as j:
+        print('Check JIRA credentials or JQL query string\n', j.args)
+        sys.exit(1) # json exception hangs for several seconds
+    except ConnectionError as c:
+        print('Check that JIRA is up', j.args)
+        sys.exit(1) # connection error hangs for several seconds
 
-def get_jenkins_tickets(*jenkins_urls):    
-   patt = re.compile('[hH][gG]-?(\d+)')
-   jenkins_tickets = set() 
-   # mercuryServer-QE v mercuryFramework-QE
-   for url in jenkins_urls: 
-      try: 
-         print('Checking {}...'.format(url))
-         jenkins_changes = HTMLSession().get(url).html.find('li')
-         # go through changelog notes
-         for li in jenkins_changes: 
-            match = patt.search(li.text) 
-            if match:
-               # force formatting to HG-XXXX to match JIRA
-               jenkins_tickets.add('HG-' + match.group(1))
-      except ConnectionError as c:
-         print("\nCheck VPN connection, Jenkins appears down")
-         sys.exit(1) # NOTE do not continue if VPN drops -- very slow drop
-   # return unique tickets built on QE 
-   return jenkins_tickets
-         
-if __name__ == "__main__": 
-   # get JIRA credentials
-   username = input('username: ') 
-   password = getpass('password: ')  
+if __name__ == "__main__":
+    # JIRA base URLs 
+    JIRA_REST_URL_BASE    = 'https://resource.marketo.com/jira/rest/api/latest/search?jql='
+    JIRA_BROWSER_URL_BASE = 'https://resource.marketo.com/jira/browse/'
+            
+    # Mercury 'resolved' tickets assigned to netID "u" (template)
+    JIRA_QUERY_TEMPLATE = '(reporter={u} or assignee={u} or verifier={u}) ' \
+                        'and project=HG and status=resolved'
+        
+    # Jenkins API endpoints
+    SERVER_QE_URL    = 'http://sjbuild2.marketo.org:8080/job/MercuryServer-QE/api/json'
+    FRAMEWORK_QE_URL = 'http://sjbuild2.marketo.org:8080/job/MercuryFramework-QE/api/json'
+        
+    DEBUG_MODE = sys.argv[-1] in ['-d', '--debug']     
+    # grab JIRA tickets assigned to me
+    username = input("username: ")
+    password = getpass("password: ")
+    # get JIRA tickets
+    jira_tickets = get_jira_tickets(JIRA_REST_URL_BASE + 
+            JIRA_QUERY_TEMPLATE.format(u=username),username,password) 
+    # grab Jenkins tickets
+    jenkins_tickets = get_jenkins_tickets(FRAMEWORK_QE_URL,SERVER_QE_URL) 
+    # debug info for ticket fetching
+    if DEBUG_MODE:
+        print('[ DEBUG: JIRA ]\n', jira_tickets) 
+        print('[ DEBUG: Jenkins ]\n', jenkins_tickets)
+    # print intersection of my tickets and tickets on QE
+    print('Workable tickets:')
+    for ticket in jira_tickets.intersection(jenkins_tickets):
+        print('\t{}{}'.format(JIRA_BROWSER_URL_BASE, ticket))
 
-   # get 'resolved' Mercury JIRA tickets and check against QE   
-   print('Checking JIRA...')
-   jira_url = JIRA_REST_URL_BASE + JIRA_QUERY_TEMPLATE.format(u=username)  
-   jira_tickets = get_jira_tickets(jira_url,username,password)  
- 
-   print('[ {} assigned JIRA tickets found ]\n'.format( len(jira_tickets) )) 
-   if not jira_tickets:
-       # do not wait for slow jenkins search, just exit.
-       sys.exit(1)
-   
-   print('Checking Jenkins changelog...') 
-   jenkins_tickets = get_jenkins_tickets(MERCURYSERVER_QE_URL,MERCURYFRAMEWORK_QE_URL)
-   
-   if jenkins_tickets:
-      print('[ {} tickets found on Jenkins ]'.format(len(jenkins_tickets)), end='\n\n')
-   else:
-      print('[ no tickets found on Jenkins -- are you sure the page is up? ]')
-   # print overlap of jenkins tickets and jira tickets
-   ready_tickets = jenkins_tickets.intersection(jira_tickets)
-   
-   if not ready_tickets:
-      print('[ no work-ready tickets ]') 
-   for ticket in jenkins_tickets.intersection(jira_tickets): 
-      print('Ready: ', JIRA_BROWSER_URL_BASE + ticket) 
