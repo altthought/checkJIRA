@@ -44,9 +44,9 @@ def get_jenkins_tickets(*jenkins_urls):
 def get_jira_tickets(url, user, pw):  
     """ 
     Grab tickets from JIRA query URL (JQL)
-    *************************************
-    *  NOTE: THIS IS _NOT_ SECURE AUTH! *
-    *************************************
+    **************************************
+    *  NOTE: THIS IS _NOT_ SECURE AUTH!  *
+    **************************************
     """
     try:
         print('[ Checking: JIRA... ]')
