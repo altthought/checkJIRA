@@ -18,7 +18,7 @@ def get_jenkins_tickets(*jenkins_urls):
     jira_pattern = re.compile(r'[hH][gG][\s-]?(\d+)')
     # go through ServerQE, then FrameworkQE
     for jenkins_url in jenkins_urls:
-        print(f'Checking: {jenkins_url}...')
+        print(f'[ Checking: {jenkins_url}... ]')
         try:
             # grab individual build URLs from the main changelog page 
             changelog_json = json.loads(HTMLSession().get(jenkins_url).text)
@@ -49,7 +49,7 @@ def get_jira_tickets(url, user, pw):
     *************************************
     """
     try:
-        print('Checking: JIRA...')
+        print('[ Checking: JIRA... ]')
         jira_request = HTMLSession().get(url, auth=(user,pw))
         tickets = json.loads(jira_request.text) 
         # get _unique_ set of HG-#### ticket keys
