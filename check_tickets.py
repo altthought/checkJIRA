@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Author: Alex Culp
-# Version: 0.4.1
+# Version: 0.4.2
 
 from getpass import getpass
 from requests_html import HTMLSession
@@ -62,6 +62,7 @@ def get_jira_tickets(url, user, pw):
         sys.exit(1) # connection error hangs for several seconds
 
 if __name__ == "__main__":
+    DEBUG_MODE = sys.argv[-1] in ('--debug','-d')
     # JIRA base URLs 
     JIRA_REST_URL_BASE    = 'https://resource.marketo.com/jira/rest/api/latest/search?jql='
     JIRA_BROWSER_URL_BASE = 'https://resource.marketo.com/jira/browse/'
@@ -74,7 +75,6 @@ if __name__ == "__main__":
     SERVER_QE_URL    = 'http://sjbuild2.marketo.org:8080/job/MercuryServer-QE/api/json'
     FRAMEWORK_QE_URL = 'http://sjbuild2.marketo.org:8080/job/MercuryFramework-QE/api/json'
         
-    DEBUG_MODE = sys.argv[-1] in ['-d', '--debug']     
     # grab JIRA tickets assigned to me
     username = input("username: ")
     password = getpass("password: ")
@@ -85,10 +85,10 @@ if __name__ == "__main__":
     jenkins_tickets = get_jenkins_tickets(FRAMEWORK_QE_URL,SERVER_QE_URL) 
     # debug info for ticket fetching
     if DEBUG_MODE:
-        print('[ DEBUG: JIRA ]\n', jira_tickets) 
-        print('[ DEBUG: Jenkins ]\n', jenkins_tickets)
+        print('[ DEBUG: JIRA ]\n', jira_tickets, '\n')
+        print('[ DEBUG: Jenkins ]\n', jenkins_tickets, '\n')
     # print intersection of my tickets and tickets on QE
-    print('Workable tickets:')
+    print('[ Ready: ]')
     for ticket in jira_tickets.intersection(jenkins_tickets):
         print('\t{}{}'.format(JIRA_BROWSER_URL_BASE, ticket))
 
