@@ -62,6 +62,7 @@ def get_jira_tickets(url, user, pw):
         sys.exit(1) # connection error hangs for several seconds
 
 if __name__ == "__main__":
+    # print extra ticket info 
     DEBUG_MODE = sys.argv[-1] in ('--debug','-d')
     
     # grab JIRA tickets assigned to me
@@ -76,22 +77,26 @@ if __name__ == "__main__":
     PROJECT_PREFIX = 'HG'
     JIRA_QUERY_TEMPLATE = '(reporter={u} or assignee={u} or verifier={u}) ' \
                         'and project={prefix} and status=resolved'
-        
-    # Jenkins API endpoints
+ 
+    # Jenkins APIs
     SERVER_QE_URL    = 'http://sjbuild2.marketo.org:8080/job/MercuryServer-QE/api/json'
     FRAMEWORK_QE_URL = 'http://sjbuild2.marketo.org:8080/job/MercuryFramework-QE/api/json'
         
     # get JIRA tickets
     jira_tickets = get_jira_tickets(JIRA_REST_URL_BASE + 
             JIRA_QUERY_TEMPLATE.format(prefix=PROJECT_PREFIX, u=user), user, password) 
+    
     # grab Jenkins tickets
     jenkins_tickets = get_jenkins_tickets(PROJECT_PREFIX, FRAMEWORK_QE_URL,SERVER_QE_URL) 
+    
     # debug info for ticket fetching
     if DEBUG_MODE:
         print('[ DEBUG: JIRA ]\n', jira_tickets, '\n')
         print('[ DEBUG: Jenkins ]\n', jenkins_tickets, '\n')
+    
     # print intersection of my tickets and tickets on QE
     print('[ Ready: ]')
+    
     for ticket in jira_tickets.intersection(jenkins_tickets):
         print('\t{}{}'.format(JIRA_BROWSER_URL_BASE, ticket))
 
