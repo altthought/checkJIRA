@@ -10,7 +10,7 @@ import json
 import re
 import sys
 
-def get_jenkins_tickets(*jenkins_urls):
+def get_jenkins_tickets(jira_prefix, *jenkins_urls):
     """
     Given Jenkins changelog URL, returns set of JIRA tickets mentioned in builds
     """
@@ -38,7 +38,7 @@ def get_jenkins_tickets(*jenkins_urls):
                 # search changelog message for JIRA ticket
                 if match:
                     # force formatting to HG-XXXX to match JIRA
-                    jenkins_tickets.add('HG-' + match.group(1))
+                    jenkins_tickets.add(f'{jira_prefix}-{match.group(1)}')
     return jenkins_tickets
 
 def get_jira_tickets(url, user, pw):  
@@ -63,26 +63,29 @@ def get_jira_tickets(url, user, pw):
 
 if __name__ == "__main__":
     DEBUG_MODE = sys.argv[-1] in ('--debug','-d')
+    
+    # grab JIRA tickets assigned to me
+    user = input("username: ")
+    password = getpass("password: ")
+
     # JIRA base URLs 
     JIRA_REST_URL_BASE    = 'https://resource.marketo.com/jira/rest/api/latest/search?jql='
     JIRA_BROWSER_URL_BASE = 'https://resource.marketo.com/jira/browse/'
             
     # Mercury 'resolved' tickets assigned to netID "u" (template)
+    PROJECT_PREFIX = 'HG'
     JIRA_QUERY_TEMPLATE = '(reporter={u} or assignee={u} or verifier={u}) ' \
-                        'and project=HG and status=resolved'
+                        'and project={prefix} and status=resolved'
         
     # Jenkins API endpoints
     SERVER_QE_URL    = 'http://sjbuild2.marketo.org:8080/job/MercuryServer-QE/api/json'
     FRAMEWORK_QE_URL = 'http://sjbuild2.marketo.org:8080/job/MercuryFramework-QE/api/json'
         
-    # grab JIRA tickets assigned to me
-    username = input("username: ")
-    password = getpass("password: ")
     # get JIRA tickets
     jira_tickets = get_jira_tickets(JIRA_REST_URL_BASE + 
-            JIRA_QUERY_TEMPLATE.format(u=username),username,password) 
+            JIRA_QUERY_TEMPLATE.format(prefix=PROJECT_PREFIX, u=user), user, password) 
     # grab Jenkins tickets
-    jenkins_tickets = get_jenkins_tickets(FRAMEWORK_QE_URL,SERVER_QE_URL) 
+    jenkins_tickets = get_jenkins_tickets(PROJECT_PREFIX, FRAMEWORK_QE_URL,SERVER_QE_URL) 
     # debug info for ticket fetching
     if DEBUG_MODE:
         print('[ DEBUG: JIRA ]\n', jira_tickets, '\n')
