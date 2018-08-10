@@ -52,14 +52,14 @@ def get_jira_tickets(url, user, pw):
         print('[ Checking: JIRA... ]')
         jira_request = HTMLSession().get(url, auth=(user,pw))
         tickets = json.loads(jira_request.text) 
-        # get _unique_ set of HG-#### ticket keys
+        # get *unique* set of HG-#### ticket keys
         return {ticket['key'] for ticket in tickets['issues']}  
     except JSONDecodeError as j:
         print('Check JIRA credentials or JQL query string\n', j.args)
-        sys.exit(1) # json exception hangs for several seconds
+        sys.exit(1) # json exception hangs 
     except ConnectionError as c:
         print('Check that JIRA is up', j.args)
-        sys.exit(1) # connection error hangs for several seconds
+        sys.exit(1) # connection error hangs 
 
 if __name__ == "__main__":
     # print extra ticket info 
@@ -91,8 +91,8 @@ if __name__ == "__main__":
     
     # debug info for ticket fetching
     if DEBUG_MODE:
-        print('[ DEBUG: JIRA ]\n', jira_tickets, '\n')
-        print('[ DEBUG: Jenkins ]\n', jenkins_tickets, '\n')
+        print('[ DEBUG: JIRA ]\n', jira_tickets, end='\n' * 2)
+        print('[ DEBUG: Jenkins ]\n', jenkins_tickets, end='\n' * 2)
     
     # print intersection of my tickets and tickets on QE
     print('[ Ready: ]')
