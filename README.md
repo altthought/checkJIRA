@@ -25,11 +25,11 @@ python3 check_tickets.py
 username: <name>
 password: <password>
 
-Checking: JIRA...
-Checking: http://sjbuild2.marketo.org:8080/job/MercuryFramework-QE/api/json...
-Checking: http://sjbuild2.marketo.org:8080/job/MercuryServer-QE/api/json...
+[ Checking: JIRA... ]
+[ Checking: http://sjbuild2.marketo.org:8080/job/MercuryFramework-QE/api/json... ]
+[ Checking: http://sjbuild2.marketo.org:8080/job/MercuryServer-QE/api/json... ]
 
-Workable tickets:
+[ Ready: ]
    https://resource.marketo.com/jira/browse/HG-7231
    https://resource.marketo.com/jira/browse/HG-7225
    https://resource.marketo.com/jira/browse/HG-6631
@@ -39,4 +39,4 @@ Workable tickets:
 
 - the HG ticket must be mentioned in a commit on that feature/bugfix branch
    - `git commit -m 'HG-xxxx <commit description>'`
-   - _only needs to be mentioned in a single commit_
+   - _Note: only needs to be mentioned in a single commit_
