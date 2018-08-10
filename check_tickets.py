@@ -68,6 +68,7 @@ if __name__ == "__main__":
     # grab JIRA tickets assigned to me
     user = input("username: ")
     password = getpass("password: ")
+    print()
 
     # JIRA base URLs 
     JIRA_REST_URL_BASE    = 'https://resource.marketo.com/jira/rest/api/latest/search?jql='
@@ -95,7 +96,7 @@ if __name__ == "__main__":
         print('[ DEBUG: Jenkins ]\n', jenkins_tickets, end='\n' * 2)
     
     # print intersection of my tickets and tickets on QE
-    print('[ Ready: ]')
+    print('\n[ Ready: ]')
     
     for ticket in jira_tickets.intersection(jenkins_tickets):
         print('\t{}{}'.format(JIRA_BROWSER_URL_BASE, ticket))
