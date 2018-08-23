@@ -62,14 +62,8 @@ def get_jira_tickets(url, user, pw):
         sys.exit(1) # connection error hangs 
 
 if __name__ == "__main__":
-    # print extra ticket info 
-    DEBUG_MODE = sys.argv[-1] in ('--debug','-d')
-    
-    # grab JIRA tickets assigned to me
-    user = input("username: ")
-    password = getpass("password: ")
-    print()
 
+    # CONFIGURATION START #################################################################
     # JIRA base URLs 
     JIRA_REST_URL_BASE    = 'https://resource.marketo.com/jira/rest/api/latest/search?jql='
     JIRA_BROWSER_URL_BASE = 'https://resource.marketo.com/jira/browse/'
@@ -82,6 +76,16 @@ if __name__ == "__main__":
     # Jenkins APIs
     SERVER_QE_URL    = 'http://sjbuild2.marketo.org:8080/job/MercuryServer-QE/api/json'
     FRAMEWORK_QE_URL = 'http://sjbuild2.marketo.org:8080/job/MercuryFramework-QE/api/json'
+   
+    # CONFIGURATION END ###################################################################
+
+    # print extra ticket info 
+    DEBUG_MODE = sys.argv[-1] in ('--debug','-d')
+    
+    # grab JIRA tickets assigned to me
+    user = input("username: ")
+    password = getpass("password: ")
+    print()
         
     # get JIRA tickets
     jira_tickets = get_jira_tickets(JIRA_REST_URL_BASE + 
