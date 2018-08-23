@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Author: Alex Culp
-# Version: 0.4.2
+# Version: 0.4.3
 
 from getpass import getpass
 from requests_html import HTMLSession
