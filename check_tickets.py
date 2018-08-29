@@ -9,9 +9,8 @@ from requests.exceptions import ConnectionError
 import json
 import re
 import sys
-import toml 
 
-def get_jenkins_tickets(jira_prefix, *jenkins_urls):
+def get_jenkins_tickets(jira_prefix, jenkins_urls):
     """
     Given Jenkins changelog URL, returns set of JIRA tickets mentioned in builds
     """
@@ -64,16 +63,17 @@ def get_jira_tickets(url, user, pw):
 
 if __name__ == "__main__":
     # load config file and map values 
-    with open('config.toml', 'rt') as f:
+    with open('config.json', 'rt') as f:
         global config
-        config = toml.loads(f.read())
+        config = json.loads(f.read())
     
-    JIRA_PROJECT_NAME   = config['JIRA']['JIRA_PROJECT_NAME']
-    JIRA_QUERY_TEMPLATE = config['JIRA']['JIRA_QUERY_TEMPLATE']
-    JIRA_REST_URL_BASE  = config['JIRA']['JIRA_REST_URL_BASE']
-    JIRA_BROWSER_BASE   = config['JIRA']['JIRA_BROWSER_BASE']
-    SERVER_QE_URL       = config['jenkins']['SERVER_QE_URL'] 
-    FRAMEWORK_QE_URL    = config['jenkins']['FRAMEWORK_QE_URL'] 
+    JIRA_PROJECT_NAME   = config['jira']['JIRA_PROJECT_NAME']
+    JIRA_QUERY_TEMPLATE = config['jira']['JIRA_QUERY_TEMPLATE']
+    JIRA_REST_URL_BASE  = config['jira']['JIRA_REST_URL_BASE']
+    JIRA_BROWSER_BASE   = config['jira']['JIRA_BROWSER_BASE']
+    JENKINS_URLS        = tuple(config['jenkins_urls'])
+    #SERVER_QE_URL       = config['jenkins']['SERVER_QE_URL'] 
+    #FRAMEWORK_QE_URL    = config['jenkins']['FRAMEWORK_QE_URL'] 
 
     # print extra ticket info 
     DEBUG_MODE = sys.argv[-1] in ('--debug','-d')
@@ -87,12 +87,12 @@ if __name__ == "__main__":
             JIRA_QUERY_TEMPLATE.format(prefix=JIRA_PROJECT_NAME, u=user), user, password) 
     
     # grab Jenkins tickets
-    jenkins_tickets = get_jenkins_tickets(JIRA_PROJECT_NAME, FRAMEWORK_QE_URL,SERVER_QE_URL) 
+    jenkins_tickets = get_jenkins_tickets(JIRA_PROJECT_NAME, JENKINS_URLS)
     
     # debug info for ticket fetching
     if DEBUG_MODE:
-        print('\n[ DEBUG: JIRA ]', jira_tickets, end='\n' * 2)
-        print('[ DEBUG: Jenkins ]', jenkins_tickets, end='\n' * 2)
+        print(f'\n[ DEBUG: JIRA ]\n{jira_tickets}\n')
+        print(f'\n[ DEBUG: Jenkins ]\n{jenkins_tickets}\n') 
     
     # print intersection of my tickets and tickets on QE
     print('\n[ Ready: ]')
