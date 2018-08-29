@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Author: Alex Culp
-# Version: 0.4.3
+# Version: 0.4.4
 
 from getpass import getpass
 from requests_html import HTMLSession
@@ -9,6 +9,7 @@ from requests.exceptions import ConnectionError
 import json
 import re
 import sys
+import toml 
 
 def get_jenkins_tickets(jira_prefix, *jenkins_urls):
     """
@@ -49,7 +50,7 @@ def get_jira_tickets(url, user, pw):
     **************************************
     """
     try:
-        print('[ Checking: JIRA... ]')
+        print('\n[ Checking: JIRA... ]')
         jira_request = HTMLSession().get(url, auth=(user,pw))
         tickets = json.loads(jira_request.text) 
         # get *unique* set of HG-#### ticket keys
@@ -62,22 +63,17 @@ def get_jira_tickets(url, user, pw):
         sys.exit(1) # connection error hangs 
 
 if __name__ == "__main__":
-
-    # CONFIGURATION START #################################################################
-    # JIRA base URLs 
-    JIRA_REST_URL_BASE    = 'https://resource.marketo.com/jira/rest/api/latest/search?jql='
-    JIRA_BROWSER_URL_BASE = 'https://resource.marketo.com/jira/browse/'
-            
-    # Mercury 'resolved' tickets assigned to netID "u" (template)
-    PROJECT_PREFIX = 'HG'
-    JIRA_QUERY_TEMPLATE = '(reporter={u} or assignee={u} or verifier={u}) ' \
-                        'and project={prefix} and status=resolved'
- 
-    # Jenkins APIs
-    SERVER_QE_URL    = 'http://sjbuild2.marketo.org:8080/job/MercuryServer-QE/api/json'
-    FRAMEWORK_QE_URL = 'http://sjbuild2.marketo.org:8080/job/MercuryFramework-QE/api/json'
-   
-    # CONFIGURATION END ###################################################################
+    # load config file and map values 
+    with open('config.toml', 'rt') as f:
+        global config
+        config = toml.loads(f.read())
+    
+    JIRA_PROJECT_NAME   = config['JIRA']['JIRA_PROJECT_NAME']
+    JIRA_QUERY_TEMPLATE = config['JIRA']['JIRA_QUERY_TEMPLATE']
+    JIRA_REST_URL_BASE  = config['JIRA']['JIRA_REST_URL_BASE']
+    JIRA_BROWSER_BASE   = config['JIRA']['JIRA_BROWSER_BASE']
+    SERVER_QE_URL       = config['jenkins']['SERVER_QE_URL'] 
+    FRAMEWORK_QE_URL    = config['jenkins']['FRAMEWORK_QE_URL'] 
 
     # print extra ticket info 
     DEBUG_MODE = sys.argv[-1] in ('--debug','-d')
@@ -85,23 +81,22 @@ if __name__ == "__main__":
     # grab JIRA tickets assigned to me
     user = input("username: ")
     password = getpass("password: ")
-    print()
-        
+     
     # get JIRA tickets
     jira_tickets = get_jira_tickets(JIRA_REST_URL_BASE + 
-            JIRA_QUERY_TEMPLATE.format(prefix=PROJECT_PREFIX, u=user), user, password) 
+            JIRA_QUERY_TEMPLATE.format(prefix=JIRA_PROJECT_NAME, u=user), user, password) 
     
     # grab Jenkins tickets
-    jenkins_tickets = get_jenkins_tickets(PROJECT_PREFIX, FRAMEWORK_QE_URL,SERVER_QE_URL) 
+    jenkins_tickets = get_jenkins_tickets(JIRA_PROJECT_NAME, FRAMEWORK_QE_URL,SERVER_QE_URL) 
     
     # debug info for ticket fetching
     if DEBUG_MODE:
-        print('[ DEBUG: JIRA ]\n', jira_tickets, end='\n' * 2)
-        print('[ DEBUG: Jenkins ]\n', jenkins_tickets, end='\n' * 2)
+        print('\n[ DEBUG: JIRA ]', jira_tickets, end='\n' * 2)
+        print('[ DEBUG: Jenkins ]', jenkins_tickets, end='\n' * 2)
     
     # print intersection of my tickets and tickets on QE
     print('\n[ Ready: ]')
     
     for ticket in jira_tickets.intersection(jenkins_tickets):
-        print('\t{}{}'.format(JIRA_BROWSER_URL_BASE, ticket))
+        print('\t{}{}'.format(JIRA_BROWSER_BASE, ticket))
 
