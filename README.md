@@ -1,4 +1,4 @@
-## checkJIRA 0.4.3
+## checkJIRA 0.5.1
 ###### Author: Alex Culp
 
 ## Purpose

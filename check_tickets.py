@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Author: Alex Culp
-# Version: 0.4.4
+# Version: 0.5.1
 
 from getpass import getpass
 from requests_html import HTMLSession
@@ -62,7 +62,11 @@ def get_jira_tickets(url, user, pw):
         sys.exit(1) # connection error hangs 
 
 if __name__ == "__main__":
-    # load config file and map values 
+
+    # print all tickets we find on Jenkins & JIRA
+    DEBUG_MODE = sys.argv[-1] in ('--debug','-d')
+
+    # load config file and map URLs
     with open('config.json', 'rt') as f:
         global config
         config = json.loads(f.read())
@@ -72,12 +76,7 @@ if __name__ == "__main__":
     JIRA_REST_URL_BASE  = config['jira']['JIRA_REST_URL_BASE']
     JIRA_BROWSER_BASE   = config['jira']['JIRA_BROWSER_BASE']
     JENKINS_URLS        = tuple(config['jenkins_urls'])
-    #SERVER_QE_URL       = config['jenkins']['SERVER_QE_URL'] 
-    #FRAMEWORK_QE_URL    = config['jenkins']['FRAMEWORK_QE_URL'] 
-
-    # print extra ticket info 
-    DEBUG_MODE = sys.argv[-1] in ('--debug','-d')
-    
+ 
     # grab JIRA tickets assigned to me
     user = input("username: ")
     password = getpass("password: ")
@@ -89,7 +88,7 @@ if __name__ == "__main__":
     # grab Jenkins tickets
     jenkins_tickets = get_jenkins_tickets(JIRA_PROJECT_NAME, JENKINS_URLS)
     
-    # debug info for ticket fetching
+    # print all tickets for debugging
     if DEBUG_MODE:
         print(f'\n[ DEBUG: JIRA ]\n{jira_tickets}\n')
         print(f'\n[ DEBUG: Jenkins ]\n{jenkins_tickets}\n') 
