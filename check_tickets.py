@@ -71,7 +71,7 @@ if __name__ == "__main__":
         global config
         config = json.loads(f.read())
     
-    JIRA_PROJECT_NAME   = config['jira']['JIRA_PROJECT_NAME']
+    JIRA_PROJECT   = config['jira']['JIRA_PROJECT']
     JIRA_QUERY_TEMPLATE = config['jira']['JIRA_QUERY_TEMPLATE']
     JIRA_REST_URL_BASE  = config['jira']['JIRA_REST_URL_BASE']
     JIRA_BROWSER_BASE   = config['jira']['JIRA_BROWSER_BASE']
@@ -83,10 +83,10 @@ if __name__ == "__main__":
      
     # get JIRA tickets
     jira_tickets = get_jira_tickets(JIRA_REST_URL_BASE + 
-            JIRA_QUERY_TEMPLATE.format(project=JIRA_PROJECT_NAME, u=user), user, password) 
+            JIRA_QUERY_TEMPLATE.format(project=JIRA_PROJECT, u=user), user, password) 
     
     # grab Jenkins tickets
-    jenkins_tickets = get_jenkins_tickets(JIRA_PROJECT_NAME, JENKINS_URLS)
+    jenkins_tickets = get_jenkins_tickets(JIRA_PROJECT, JENKINS_URLS)
     
     # print all tickets for debugging
     if DEBUG_MODE:
