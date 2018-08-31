@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # Author: Alex Culp
-# Version: 0.5.1
+# Version: 0.5.2
 
 from getpass import getpass
-from requests_html import HTMLSession
+import requests
 from json.decoder import JSONDecodeError
 from requests.exceptions import ConnectionError 
 import json
@@ -21,14 +21,14 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
         print(f'[ Checking: {jenkins_url}... ]')
         try:
             # grab individual build URLs from the main changelog page 
-            changelog_json = json.loads(HTMLSession().get(jenkins_url).text)
+            changelog_json = json.loads(requests.get(jenkins_url).text)
         except ConnectionError as c:
             print('Check VPN connection! Exiting...\n', c.args)
             sys.exit(1) # VPN necessary to grab ticket information!
         build_urls = [build['url'] for build in changelog_json['builds']]
         # go through individual builds
         for build_url in build_urls: 
-            build_data = json.loads(HTMLSession().get(f'{build_url}/api/json').text)
+            build_data = json.loads(requests.get(f'{build_url}/api/json').text)
             # need change count per build to search messages
             change_count = len(build_data['changeSet']['items'])
             # check each change for a JIRA ticket reference
@@ -50,7 +50,7 @@ def get_jira_tickets(url, user, pw):
     """
     try:
         print('\n[ Checking: JIRA... ]')
-        jira_request = HTMLSession().get(url, auth=(user,pw))
+        jira_request = requests.get(url, auth=(user,pw))
         tickets = json.loads(jira_request.text) 
         # get *unique* set of HG-#### ticket keys
         return {ticket['key'] for ticket in tickets['issues']}  
