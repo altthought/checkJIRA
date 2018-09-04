@@ -1,12 +1,12 @@
 {
    "jira": {
-      "jira_project"        : "HG", 
-      "jira_query_template" : "(reporter={u} or assignee={u} or verifier={u}) and project={project} and status=resolved",
-      "jira_rest_url_base"  : "https://resource.marketo.com/jira/rest/api/latest/search?jql=",
-      "jira_browser_base"   : "https://resource.marketo.com/jira/browse/"
+      "JIRA_PROJECT"        : "HG", 
+      "JIRA_QUERY_TEMPLATE" : "(reporter={u} or assignee={u} or verifier={u}) and project={project} and status=resolved",
+      "JIRA_REST_URL_BASE"  : "https://resource.marketo.com/jira/rest/api/latest/search?jql=",
+      "JIRA_BROWSER_BASE"   : "https://resource.marketo.com/jira/browse/"
    },
 
-   "jenkins_urls": [ 
+   "JENKINS_URLS": [ 
       "http://sjbuild2.marketo.org:8080/job/MercuryServer-QE/api/json",
       "http://sjbuild2.marketo.org:8080/job/MercuryFramework-QE/api/json" 
    ]

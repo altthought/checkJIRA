@@ -71,22 +71,22 @@ if __name__ == "__main__":
         global config
         config = json.loads(f.read())
     
-    jira_project        = config['jira']['jira_project']
-    jira_query_template = config['jira']['jira_query_template']
-    jira_rest_url_base  = config['jira']['jira_rest_url_base']
-    jira_browser_base   = config['jira']['jira_browser_base']
-    jenkins_urls        = config['jenkins_urls']
+    JIRA_PROJECT        = config['jira']['JIRA_PROJECT']
+    JIRA_QUERY_TEMPLATE = config['jira']['JIRA_QUERY_TEMPLATE']
+    JIRA_REST_URL_BASE  = config['jira']['JIRA_REST_URL_BASE']
+    JIRA_BROWSER_BASE   = config['jira']['JIRA_BROWSER_BASE']
+    JENKINS_URLS        = config['JENKINS_URLS']
     
     # grab JIRA tickets assigned to me
     user = input("username: ")
     password = getpass("password: ")
      
     # get JIRA tickets
-    jira_tickets = get_jira_tickets(jira_rest_url_base + 
-            jira_query_template.format(project=jira_project, u=user), user, password) 
+    jira_tickets = get_jira_tickets(JIRA_REST_URL_BASE + 
+            JIRA_QUERY_TEMPLATE.format(project=JIRA_PROJECT, u=user), user, password) 
     
     # grab Jenkins tickets
-    jenkins_tickets = get_jenkins_tickets(jira_project, jenkins_urls)
+    jenkins_tickets = get_jenkins_tickets(JIRA_PROJECT, JENKINS_URLS)
     
     # print all tickets for debugging
     if DEBUG_MODE:
@@ -97,5 +97,5 @@ if __name__ == "__main__":
     print('\n[ Ready: ]')
     
     for ticket in jira_tickets.intersection(jenkins_tickets):
-        print('\t{}{}'.format(jira_browser_base, ticket))
+        print('\t{}{}'.format(JIRA_BROWSER_BASE, ticket))
 
