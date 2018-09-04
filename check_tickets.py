@@ -71,12 +71,12 @@ if __name__ == "__main__":
         global config
         config = json.loads(f.read())
     
-    JIRA_PROJECT   = config['jira']['JIRA_PROJECT']
+    JIRA_PROJECT        = config['jira']['JIRA_PROJECT']
     JIRA_QUERY_TEMPLATE = config['jira']['JIRA_QUERY_TEMPLATE']
     JIRA_REST_URL_BASE  = config['jira']['JIRA_REST_URL_BASE']
     JIRA_BROWSER_BASE   = config['jira']['JIRA_BROWSER_BASE']
-    JENKINS_URLS        = tuple(config['jenkins_urls'])
- 
+    JENKINS_URLS        = config['jenkins_urls']
+    
     # grab JIRA tickets assigned to me
     user = input("username: ")
     password = getpass("password: ")
