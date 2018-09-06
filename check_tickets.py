@@ -3,9 +3,9 @@
 # Version: 0.5.2
 
 from getpass import getpass
-import requests
 from json.decoder import JSONDecodeError
 from requests.exceptions import ConnectionError 
+import requests
 import json
 import re
 import sys

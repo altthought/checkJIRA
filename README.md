@@ -13,7 +13,7 @@ Returns the overlap of:
 # install python 3.6+
 brew install python3
 
-# install dependencies
+# install dependencies (really just requests)
 python3 -m pip install -r requirements.txt
 ```
 
