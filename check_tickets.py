@@ -64,7 +64,7 @@ def get_jira_tickets(url, user, pw):
 if __name__ == "__main__":
 
     # print all tickets we find on Jenkins & JIRA
-    DEBUG_MODE = sys.argv[-1] in ('--debug','-d')
+    DEBUG_FLAG = sys.argv[-1] in ('--debug','-d')
 
     # load config file and map URLs
     with open('config.json', 'rt') as f:
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     jenkins_tickets = get_jenkins_tickets(JIRA_PROJECT, JENKINS_URLS)
     
     # print all tickets for debugging
-    if DEBUG_MODE:
+    if DEBUG_FLAG:
         print(f'\n[ DEBUG: JIRA ]\n{jira_tickets}\n')
         print(f'\n[ DEBUG: Jenkins ]\n{jenkins_tickets}\n') 
     
