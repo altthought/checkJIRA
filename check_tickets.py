@@ -16,7 +16,7 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
     """
     jenkins_tickets = set()
     jira_pattern = re.compile(r'[hH][gG][\s-]?(\d+)')
-    # go through ServerQE, then FrameworkQE
+    # go through jenkins jobs
     for jenkins_url in jenkins_urls:
         print(f'[ Checking: {jenkins_url}... ]')
         try:
@@ -26,13 +26,13 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
             print('Check VPN connection! Exiting...\n', c.args)
             sys.exit(1) # VPN necessary to grab ticket information!
         build_urls = [build['url'] for build in changelog_json['builds']]
-        # go through individual builds
+        # go through individual builds for each jenkins job
         for build_url in build_urls: 
             build_data = json.loads(requests.get(f'{build_url}/api/json').text)
-            # need change count per build to search messages
-            change_count = len(build_data['changeSet']['items'])
+            # need changelog count per build to search messages
+            changelog_size = len(build_data['changeSet']['items'])
             # check each change for a JIRA ticket reference
-            for change in range(change_count):
+            for change in range(changelog_size):
                 msg = build_data['changeSet']['items'][change]['msg']
                 match = jira_pattern.search(msg) 
                 # search changelog message for JIRA ticket
