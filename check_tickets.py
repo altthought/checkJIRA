@@ -67,16 +67,19 @@ if __name__ == "__main__":
     DEBUG_FLAG = sys.argv[-1] in ('--debug','-d')
 
     # load config file and map URLs
+    config = {}
     with open('config.json', 'rt') as f:
-        global config
         config = json.loads(f.read())
-    
-    JIRA_PROJECT        = config['jira']['JIRA_PROJECT']
-    JIRA_QUERY_TEMPLATE = config['jira']['JIRA_QUERY_TEMPLATE']
-    JIRA_REST_URL_BASE  = config['jira']['JIRA_REST_URL_BASE']
-    JIRA_BROWSER_BASE   = config['jira']['JIRA_BROWSER_BASE']
-    JENKINS_URLS        = config['JENKINS_URLS']
-    
+    try:
+        JIRA_PROJECT        = config['jira']['JIRA_PROJECT']
+        JIRA_QUERY_TEMPLATE = config['jira']['JIRA_QUERY_TEMPLATE']
+        JIRA_REST_URL_BASE  = config['jira']['JIRA_REST_URL_BASE']
+        JIRA_BROWSER_BASE   = config['jira']['JIRA_BROWSER_BASE']
+        JENKINS_URLS        = config['JENKINS_URLS']
+    except KeyError as k:
+        print("failed to load key: ", k.args)
+        sys.exit(1)
+
     # grab JIRA tickets assigned to me
     user = input("username: ")
     password = getpass("password: ")
