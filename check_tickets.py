@@ -73,7 +73,7 @@ if __name__ == "__main__":
     try:
         JIRA_PROJECT        = config['jira']['JIRA_PROJECT']
         JIRA_QUERY_TEMPLATE = config['jira']['JIRA_QUERY_TEMPLATE']
-        JIRA_REST_URL_BASE  = config['jira']['JIRA_REST_URL_BASE']
+        JIRA_URL_BASE       = config['jira']['JIRA_URL_BASE']
         JIRA_BROWSER_BASE   = config['jira']['JIRA_BROWSER_BASE']
         JENKINS_URLS        = config['JENKINS_URLS']
     except KeyError as k:
@@ -85,8 +85,8 @@ if __name__ == "__main__":
     password = getpass("password: ")
      
     # get JIRA tickets
-    jira_tickets = get_jira_tickets(JIRA_REST_URL_BASE + 
-            JIRA_QUERY_TEMPLATE.format(project=JIRA_PROJECT, u=user), user, password) 
+    JIRA_URL = JIRA_URL_BASE + JIRA_QUERY_TEMPLATE.format(project=JIRA_PROJECT, u=user) 
+    jira_tickets = get_jira_tickets(JIRA_URL, user, password) 
     
     # grab Jenkins tickets
     jenkins_tickets = get_jenkins_tickets(JIRA_PROJECT, JENKINS_URLS)
