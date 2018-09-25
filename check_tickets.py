@@ -71,10 +71,10 @@ if __name__ == "__main__":
     with open('config.json', 'rt') as f:
         config = json.loads(f.read())
     try:
-        JIRA_PROJECT        = config['jira']['JIRA_PROJECT']
-        JIRA_QUERY_TEMPLATE = config['jira']['JIRA_QUERY_TEMPLATE']
-        JIRA_URL_BASE       = config['jira']['JIRA_URL_BASE']
-        JIRA_BROWSER_BASE   = config['jira']['JIRA_BROWSER_BASE']
+        JIRA_PROJECT        = config['JIRA_PROJECT']
+        JIRA_QUERY_TEMPLATE = config['JIRA_QUERY_TEMPLATE']
+        JIRA_URL_BASE       = config['JIRA_URL_BASE']
+        JIRA_BROWSER_BASE   = config['JIRA_BROWSER_BASE']
         JENKINS_URLS        = config['JENKINS_URLS']
     except KeyError as k:
         print("failed to load key: ", k.args)
