@@ -5,7 +5,7 @@
    "JIRA_BROWSER_BASE"   : "https://resource.marketo.com/jira/browse/",
    
    "JENKINS_URLS": [ 
-      "http://sjbuild2.marketo.org:8080/job/MercuryServer-QE/api/json",
-      "http://sjbuild2.marketo.org:8080/job/MercuryFramework-QE/api/json" 
+      "http://sjbuild2.marketo.org:8080/Mercury/job/MercuryServer-QE/api/json",
+      "http://sjbuild2.marketo.org:8080/Mercury/job/MercuryFramework-QE/api/json" 
    ]
 }
