@@ -5,6 +5,7 @@
 from getpass import getpass
 from json.decoder import JSONDecodeError
 from requests.exceptions import ConnectionError 
+import urllib3
 import requests
 import json
 import re
@@ -21,14 +22,21 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
         print(f'[ Checking: {jenkins_url}... ]')
         try:
             # grab individual build URLs from the main changelog page 
-            changelog_json = json.loads(requests.get(jenkins_url).text)
+            # turn off SSL verification (self-signed cert)
+            r = requests.get(jenkins_url, verify=False)
+            changelog_json = json.loads(r.text)
         except ConnectionError as c:
             print('Check VPN connection! Exiting...\n', c.args)
             sys.exit(1) # VPN necessary to grab ticket information!
         build_urls = [build['url'] for build in changelog_json['builds']]
         # go through individual builds for each jenkins job
         for build_url in build_urls: 
-            build_data = json.loads(requests.get(f'{build_url}/api/json').text)
+            try:
+                # turn off SSL verification (self-signed cert)
+                r = requests.get(f'{build_url}/api/json', verify=False)
+                build_data = json.loads(r.text)
+            except InsecureRequestWarning:
+                print('skip')
             # need changelog count per build to search messages
             changelog_size = len(build_data['changeSet']['items'])
             # check each change for a JIRA ticket reference
@@ -62,6 +70,9 @@ def get_jira_tickets(url, user, pw):
         sys.exit(1) # connection error hangs 
 
 if __name__ == "__main__":
+
+    # warnings for internal self-signed certs are useless
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     # print all tickets we find on Jenkins & JIRA
     DEBUG_FLAG = sys.argv[-1] in ('--debug','-d')
