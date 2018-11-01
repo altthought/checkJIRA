@@ -37,6 +37,7 @@ password: <password>
 
 ## Limitations
 
+- Jenkins being moved to a self-signed ssl cert requires disabling ssl checks
 - the HG ticket must be mentioned in a commit on that feature/bugfix branch
    - `git commit -m 'HG-xxxx <commit description>'`
    - _Note: only needs to be mentioned in a single commit_
