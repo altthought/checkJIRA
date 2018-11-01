@@ -83,7 +83,7 @@ if __name__ == "__main__":
         config = json.loads(f.read())
     try:
         JIRA_PROJECT        = config['JIRA_PROJECT']
-        JIRA_QUERY_TEMPLATE = config['JIRA_QUERY_TEMPLATE']
+        JIRA_TEMPLATE = config['JIRA_TEMPLATE']
         JIRA_URL_BASE       = config['JIRA_URL_BASE']
         JIRA_BROWSER_BASE   = config['JIRA_BROWSER_BASE']
         JENKINS_URLS        = config['JENKINS_URLS']
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     password = getpass("password: ")
      
     # get JIRA tickets
-    JIRA_URL = JIRA_URL_BASE + JIRA_QUERY_TEMPLATE.format(project=JIRA_PROJECT, u=user) 
+    JIRA_URL = JIRA_URL_BASE + JIRA_TEMPLATE.format(project=JIRA_PROJECT, u=user) 
     jira_tickets = get_jira_tickets(JIRA_URL, user, password) 
     
     # grab Jenkins tickets

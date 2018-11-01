@@ -1,6 +1,6 @@
 {
    "JIRA_PROJECT"        : "HG", 
-   "JIRA_QUERY_TEMPLATE" : "(reporter={u} or assignee={u} or verifier={u}) and project={project} and status=resolved",
+   "JIRA_TEMPLATE" : "(reporter={u} or assignee={u} or verifier={u}) and project={project} and status=resolved",
    "JIRA_URL_BASE"  : "https://resource.marketo.com/jira/rest/api/latest/search?jql=",
    "JIRA_BROWSER_BASE"   : "https://resource.marketo.com/jira/browse/",
    
