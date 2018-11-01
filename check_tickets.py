@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Author: Alex Culp
-# Version: 0.5.2
+# Version: 0.5.3
 
 from getpass import getpass
 from json.decoder import JSONDecodeError
