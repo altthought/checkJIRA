@@ -82,11 +82,11 @@ if __name__ == "__main__":
     with open('config.json', 'rt') as f:
         config = json.loads(f.read())
     try:
-        JIRA_PROJECT        = config['JIRA_PROJECT']
-        JIRA_TEMPLATE = config['JIRA_TEMPLATE']
-        JIRA_URL_BASE       = config['JIRA_URL_BASE']
-        JIRA_BROWSER_BASE   = config['JIRA_BROWSER_BASE']
-        JENKINS_URLS        = config['JENKINS_URLS']
+        JIRA_PROJECT      = config['JIRA_PROJECT']
+        JIRA_TEMPLATE     = config['JIRA_TEMPLATE']
+        JIRA_URL_BASE     = config['JIRA_URL_BASE']
+        JIRA_BROWSER_BASE = config['JIRA_BROWSER_BASE']
+        JENKINS_URLS      = config['JENKINS_URLS']
     except KeyError as k:
         print("failed to load key: ", k.args)
         sys.exit(1)
