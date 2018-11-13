@@ -69,8 +69,7 @@ def get_jira_tickets(url, user, pw):
         print('Check that JIRA is up', j.args)
         sys.exit(1) # connection error hangs 
 
-if __name__ == "__main__":
-
+def main(): 
     # warnings for internal self-signed certs are useless
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -113,3 +112,5 @@ if __name__ == "__main__":
     for ticket in jira_tickets.intersection(jenkins_tickets):
         print('\t{}{}'.format(JIRA_BROWSER_BASE, ticket))
 
+if __name__ == "__main__":
+    main()
