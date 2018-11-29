@@ -1,8 +1,8 @@
 {
-   "JIRA_PROJECT"        : "HG", 
-   "JIRA_TEMPLATE" : "(reporter={u} or assignee={u} or verifier={u}) and project={project} and status=resolved",
-   "JIRA_URL_BASE"  : "https://resource.marketo.com/jira/rest/api/latest/search?jql=",
-   "JIRA_BROWSER_BASE"   : "https://resource.marketo.com/jira/browse/",
+   "JIRA_PROJECT"      : "HG", 
+   "JIRA_TEMPLATE"     : "(reporter={u} or assignee={u} or verifier={u}) and project={project} and status=resolved",
+   "JIRA_URL_BASE"     : "https://resource.marketo.com/jira/rest/api/latest/search?jql=",
+   "JIRA_BROWSER_BASE" : "https://resource.marketo.com/jira/browse/",
    
    "JENKINS_URLS": [ 
       "https://sjbuild2.marketo.org/view/Mercury/job/MercuryServer-QE/api/json",
