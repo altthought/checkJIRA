@@ -7,6 +7,11 @@ Returns the overlap of:
    - HG tickets assigned to you
    - HG tickets mentioned in Mercury QE changelog
 
+Note, you could trivially repurpose this tool to be overlap of:
+   
+   - JIRA project tickets assigned to you
+   - JIRA project tickets mentioned as branch names in Jenkins build changelog
+
 ## Installation
 
 ```bash
