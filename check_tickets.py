@@ -5,7 +5,6 @@
 from getpass import getpass
 from json.decoder import JSONDecodeError
 from requests.exceptions import ConnectionError 
-import urllib3
 import requests
 import json
 import re
