@@ -35,8 +35,8 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
                 # turn off SSL verification (self-signed cert)
                 r = requests.get(f'{build_url}/api/json', verify=False)
                 build_data = json.loads(r.text)
-            except InsecureRequestWarning:
-                print('skip')
+            except urllib3.exceptions.InsecureRequestWarning:
+                print('skipping',r.url)
             # need changelog count per build to search messages
             changelog_size = len(build_data['changeSet']['items'])
             # check each change for a JIRA ticket reference
