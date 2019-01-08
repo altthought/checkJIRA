@@ -87,7 +87,7 @@ def main():
         JIRA_BROWSER_BASE = config['JIRA_BROWSER_BASE']
         JENKINS_URLS      = config['JENKINS_URLS']
     except KeyError as k:
-        print("failed to load key: ", k.args)
+        print("failed to load key:", k.args)
         sys.exit(1)
 
     # grab JIRA tickets assigned to me
