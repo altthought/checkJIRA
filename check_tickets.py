@@ -93,7 +93,7 @@ def main():
     # grab JIRA tickets assigned to me
     user = input("username: ")
     password = getpass("password: ")
-     
+    
     # get JIRA tickets
     JIRA_URL = JIRA_URL_BASE + JIRA_TEMPLATE.format(project=JIRA_PROJECT, u=user) 
     jira_tickets = get_jira_tickets(JIRA_URL, user, password) 
