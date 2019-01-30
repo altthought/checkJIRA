@@ -26,7 +26,7 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
             r = requests.get(jenkins_url, verify=False)
             changelog_json = json.loads(r.text)
         except ConnectionError as c:
-            print('Check VPN connection! Exiting...\n', c.args)
+            print('Check VPN connection! Exiting...\n\n', c.args)
             sys.exit(1) # VPN necessary to grab ticket information!
         build_urls = [build['url'] for build in changelog_json['builds']]
         # go through individual builds for each jenkins job
