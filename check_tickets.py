@@ -111,10 +111,10 @@ def main():
         print('\n[ Ready: ]')
         
         for ticket in jira_tickets.intersection(jenkins_tickets):
-            print('\t{}{}'.format(JIRA_BROWSER_BASE, ticket))
+            print('\t{}{}\n'.format(JIRA_BROWSER_BASE, ticket))
         
-        # break out of scanning
-        if input("Continue? (Y/n): ") not in ('','y','Y'): 
+        # stop scanning
+        if input("Check again? (Y/n): ") not in 'yY':
             break
 
 if __name__ == "__main__":
