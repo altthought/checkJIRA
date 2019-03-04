@@ -21,8 +21,7 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
     for jenkins_url in jenkins_urls:
         print(f'[ Checking: {jenkins_url}... ]')
         try:
-            # grab individual build URLs from the main changelog page 
-            # turn off SSL verification (self-signed cert)
+            # fetch build info from changelog (ignore self-signed cert)
             r = requests.get(jenkins_url, verify=False)
             changelog_json = json.loads(r.text)
         except ConnectionError as c:
