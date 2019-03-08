@@ -1,8 +1,8 @@
-## checkJIRA 0.5.3
+## checkJIRA 
 ###### Author: Alex Culp
 
 ## Purpose
-Returns the overlap of:
+Returns the **overlap** of:
 
    - HG tickets assigned to you
    - HG tickets mentioned in Mercury QE changelog
@@ -14,8 +14,8 @@ Note, you could trivially repurpose this tool to be overlap of:
 
 ## Installation
 
-```bash
-# install python 3.6+
+```
+# we're all adults here, use python3
 brew install python3
 
 # install dependencies (really just requests)
@@ -24,7 +24,7 @@ python3 -m pip install -r requirements.txt
 
 ## Usage
 
-```bash
+```
 # display testable tickets
 python3 check_tickets.py
 username: <name>
@@ -42,7 +42,7 @@ password: <password>
 
 ## Limitations
 
-- Jenkins being moved to a self-signed ssl cert requires disabling ssl checks
+- if Jenkins server uses a self-signed SSL cert you must disable SSL checks
 - the HG ticket must be mentioned in a commit on that feature/bugfix branch
-   - `git commit -m 'HG-xxxx <commit description>'`
+   - `git commit -m 'HG-#### <commit description>'`
    - _Note: only needs to be mentioned in a single commit_
