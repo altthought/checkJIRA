@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Author: Alex Culp
-# Version: 0.6
+# Version: 0.5.3
 
 from getpass import getpass
 from json.decoder import JSONDecodeError
@@ -16,8 +16,11 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
     Given Jenkins changelog URL, returns set of JIRA tickets mentioned in builds
     """
     jenkins_tickets = set()
-    # regex pattern for tickets in form: HG-3323, HG221, hg-2201
-    jira_pattern = re.compile(rf'{jira_prefix}[\s-]?\d+', re.IGNORECASE)
+    # given proj name 'JIRA', need "[jJ][iI][rR][aA]" for regex search
+    project_name = ''.join(f'[{a.lower()}{a.upper()}]' for a in jira_prefix) 
+    ticket_number = r'[\s-]?(\d+)' 
+    # regex pattern for tickets in form: JIRA-3323
+    jira_pattern = re.compile(project_name + ticket_number)
     # go through jenkins jobs
     for jenkins_url in jenkins_urls:
         print(f'[ Checking: {jenkins_url}... ]')
@@ -46,7 +49,7 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
                 # search changelog message for JIRA ticket
                 if match:
                     # force formatting to HG-XXXX to match JIRA
-                    jenkins_tickets.add(f'{jira_prefix}-{match.group(0)}')
+                    jenkins_tickets.add(f'{jira_prefix}-{match.group(1)}')
     return jenkins_tickets
 
 def get_jira_tickets(url, user, pw):  
@@ -66,7 +69,7 @@ def get_jira_tickets(url, user, pw):
         print('Check JIRA credentials or JQL query string\n', j.args)
         sys.exit(1) # json exception hangs 
     except ConnectionError as c:
-        print('Check that JIRA is up', j.args)
+        print('Check that JIRA is up', c.args)
         sys.exit(1) # connection error hangs 
 
 def main(): 
