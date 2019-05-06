@@ -4,7 +4,7 @@
 
 from getpass import getpass
 from json.decoder import JSONDecodeError
-from requests.exceptions import ConnectionError 
+from requests.exceptions import ConnectionError,HTTPError
 import urllib3
 import requests
 import json
@@ -31,6 +31,9 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
         except ConnectionError as c:
             print('Check VPN connection! Exiting...\n\n', c.args)
             sys.exit(1) # VPN necessary to grab ticket information!
+        except HTTPError as h:
+            print('Jenkins is down!\n\n',h.args)
+            sys.exit(1) # Jenkins breaks query
         build_urls = [build['url'] for build in changelog_json['builds']]
         # go through individual builds for each jenkins job
         for build_url in build_urls: 
@@ -96,7 +99,7 @@ def main():
     # grab JIRA tickets assigned to me
     user = input("username: ")
     password = getpass("password: ")
-  
+
     while True:
         # get JIRA tickets
         JIRA_URL = JIRA_URL_BASE + JIRA_TEMPLATE.format(project=JIRA_PROJECT, u=user) 
