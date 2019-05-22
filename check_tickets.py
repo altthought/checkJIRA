@@ -16,11 +16,9 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
     Given Jenkins changelog URL, returns set of JIRA tickets mentioned in builds
     """
     jenkins_tickets = set()
-    # given proj name 'JIRA', need "[jJ][iI][rR][aA]" for regex search
-    project_name = ''.join(f'[{a.lower()}{a.upper()}]' for a in jira_prefix) 
     ticket_number = r'[\s-]?(\d+)' 
     # regex pattern for tickets in form: JIRA-3323
-    jira_pattern = re.compile(project_name + ticket_number)
+    jira_pattern = re.compile(jira_prefix + ticket_number, re.IGNORECASE)
     # go through jenkins jobs
     for jenkins_url in jenkins_urls:
         print(f'[ Checking: {jenkins_url}... ]')
