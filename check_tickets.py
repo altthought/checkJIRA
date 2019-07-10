@@ -17,11 +17,11 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
     """
     jenkins_tickets = set()
     ticket_number = r'[\s-]?(\d+)' 
-    # regex pattern for tickets in form: HG-3323 and Hg3323
+    # regex pattern for tickets in form: 'HG 3323' / 'HG-3323' / 'Hg3323'
     jira_pattern = re.compile(jira_prefix + ticket_number, re.IGNORECASE)
     # go through jenkins jobs
     for jenkins_url in jenkins_urls:
-        print(f'[ Checking: {jenkins_url}... ]')
+        print(f'[ Fetching: {jenkins_url}... ]')
         try:
             # fetch build info from changelog (ignore self-signed cert)
             r = requests.get(jenkins_url, verify=False)
@@ -38,6 +38,9 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
             try:
                 # turn off SSL verification (self-signed cert)
                 r = requests.get(f'{build_url}/api/json', verify=False)
+                if r.status_code != 200:
+                    print('Failure to parse: invalid page')
+                    sys.exit(1)
                 build_data = json.loads(r.text)
             except urllib3.exceptions.InsecureRequestWarning:
                 print('skipping',r.url)
@@ -61,7 +64,7 @@ def get_jira_tickets(url, user, pw):
     **************************************
     """
     try:
-        print('\n[ Checking: JIRA... ]')
+        print('\n[ Fetching: JIRA... ]')
         jira_request = requests.get(url, auth=(user,pw))
         tickets = json.loads(jira_request.text) 
         # get *unique* set of HG-#### ticket keys
