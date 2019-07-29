@@ -4,7 +4,8 @@
 
 from getpass import getpass
 from json.decoder import JSONDecodeError
-from requests.exceptions import ConnectionError,HTTPError
+from requests.exceptions import ConnectionError
+from requests.exceptions import HTTPError
 import urllib3
 import requests
 import json
