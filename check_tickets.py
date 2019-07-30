@@ -4,8 +4,7 @@
 
 from getpass import getpass
 from json.decoder import JSONDecodeError
-from requests.exceptions import ConnectionError
-from requests.exceptions import HTTPError
+from requests.exceptions import ConnectionError, HTTPError
 import urllib3
 import requests
 import json
@@ -71,7 +70,7 @@ def get_jira_tickets(url, user, pw):
         # get *unique* set of HG-#### ticket keys
         return {ticket['key'] for ticket in tickets['issues']}  
     except JSONDecodeError as j:
-        print('Check JIRA credentials or JQL query string\n', j.args)
+        print('Incorrect JIRA username/password or broken JQL query!\n', j.args)
         sys.exit(1) # json exception hangs 
     except ConnectionError as c:
         print('Check that JIRA is up', c.args)
