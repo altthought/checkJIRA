@@ -30,7 +30,7 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
             print('Check VPN connection! Exiting...\n\n', c.args)
             sys.exit(1) # VPN necessary to grab ticket information!
         except HTTPError as h:
-            print('Jenkins is down!\n\n',h.args)
+            print('Jenkins is down!\n\n', h.args)
             sys.exit(1) # Jenkins breaks query
         build_urls = [build['url'] for build in changelog_json['builds']]
         # go through individual builds for each jenkins job
