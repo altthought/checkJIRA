@@ -101,28 +101,24 @@ def main():
     user = input("username: ")
     password = getpass("password: ")
 
-    while True:
-        # get JIRA tickets
-        JIRA_URL = JIRA_URL_BASE + JIRA_TEMPLATE.format(project=JIRA_PROJECT, u=user) 
-        jira_tickets = get_jira_tickets(JIRA_URL, user, password) 
+    # get JIRA tickets
+    JIRA_URL = JIRA_URL_BASE + JIRA_TEMPLATE.format(project=JIRA_PROJECT, u=user) 
+    jira_tickets = get_jira_tickets(JIRA_URL, user, password) 
+    
+    # grab Jenkins tickets
+    jenkins_tickets = get_jenkins_tickets(JIRA_PROJECT, JENKINS_URLS)
+    
+    # print all tickets for debugging
+    if DEBUG_FLAG:
+        print(f'\n[ DEBUG: JIRA ]\n{jira_tickets}\n')
+        print(f'\n[ DEBUG: Jenkins ]\n{jenkins_tickets}\n') 
+    
+    # print intersection of my tickets and tickets on QE
+    print('\n[ Ready: ]')
+    
+    for ticket in jira_tickets.intersection(jenkins_tickets):
+        print('\t{}{}\n'.format(JIRA_BROWSER_BASE, ticket))
         
-        # grab Jenkins tickets
-        jenkins_tickets = get_jenkins_tickets(JIRA_PROJECT, JENKINS_URLS)
-        
-        # print all tickets for debugging
-        if DEBUG_FLAG:
-            print(f'\n[ DEBUG: JIRA ]\n{jira_tickets}\n')
-            print(f'\n[ DEBUG: Jenkins ]\n{jenkins_tickets}\n') 
-        
-        # print intersection of my tickets and tickets on QE
-        print('\n[ Ready: ]')
-        
-        for ticket in jira_tickets.intersection(jenkins_tickets):
-            print('\t{}{}\n'.format(JIRA_BROWSER_BASE, ticket))
-        
-        # stop scanning
-        if input("Check again? (Y/n): ") not in 'yY':
-            break
 
 if __name__ == "__main__":
     main()
