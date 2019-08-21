@@ -7,5 +7,6 @@
    "JENKINS_URLS": [ 
       "https://sjbuild2.marketo.org/view/Mercury/job/MercuryServer-QE/api/json",
       "https://sjbuild2.marketo.org/view/Mercury/job/MercuryFramework-QE/api/json" 
-   ]
+   ],
+   "USERNAME": "aculp" 
 }

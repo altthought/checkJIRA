@@ -93,17 +93,17 @@ def main():
         JIRA_URL_BASE     = config['JIRA_URL_BASE']
         JIRA_BROWSER_BASE = config['JIRA_BROWSER_BASE']
         JENKINS_URLS      = config['JENKINS_URLS']
+        USERNAME          = config['USERNAME']
     except KeyError as k:
         print("failed to load key:", k.args)
         sys.exit(1)
 
     # grab JIRA tickets assigned to me
-    user = input("username: ")
-    password = getpass("password: ")
+    password = getpass(f"{USERNAME}'s password: ")
 
     # get JIRA tickets
-    JIRA_URL = JIRA_URL_BASE + JIRA_TEMPLATE.format(project=JIRA_PROJECT, u=user) 
-    jira_tickets = get_jira_tickets(JIRA_URL, user, password) 
+    JIRA_URL = JIRA_URL_BASE + JIRA_TEMPLATE.format(project=JIRA_PROJECT, u=USERNAME) 
+    jira_tickets = get_jira_tickets(JIRA_URL, USERNAME, password) 
     
     # grab Jenkins tickets
     jenkins_tickets = get_jenkins_tickets(JIRA_PROJECT, JENKINS_URLS)
