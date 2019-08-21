@@ -120,5 +120,5 @@ def main():
         print('\t{}{}\n'.format(JIRA_BROWSER_BASE, ticket))
         
 
-if __name__ == "__main__": 
+if __name__ == "__main__":
     main()
