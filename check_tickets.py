@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Author: Alex Culp
-# Version: 0.5.3
+# Version: 0.6.0
 
 from getpass import getpass
 from json.decoder import JSONDecodeError
@@ -120,5 +120,5 @@ def main():
         print('\t{}{}\n'.format(JIRA_BROWSER_BASE, ticket))
         
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
     main()
