@@ -1,12 +1,13 @@
-# OS Crap
+# OS crap
 .DS_Store
+
 # vim swap files
 *.swp
 *.pyc
 
 # python environment
 __pycache__/
-venv
+venv/
 
 # configuration
 config.toml
