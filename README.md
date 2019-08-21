@@ -27,7 +27,6 @@ python3 -m pip install -r requirements.txt
 ```
 # display testable tickets
 python3 check_tickets.py
-username: <name>
 password: <password>
 
 [ Checking: JIRA... ]
