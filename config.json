@@ -3,10 +3,10 @@
    "JIRA_TEMPLATE"     : "(reporter={u} or assignee={u} or verifier={u}) and project={project} and status=resolved",
    "JIRA_URL_BASE"     : "https://resource.marketo.com/jira/rest/api/latest/search?jql=",
    "JIRA_BROWSER_BASE" : "https://resource.marketo.com/jira/browse/",
+   "USERNAME": "aculp",
    
    "JENKINS_URLS": [ 
       "https://sjbuild2.marketo.org/view/Mercury/job/MercuryServer-QE/api/json",
       "https://sjbuild2.marketo.org/view/Mercury/job/MercuryFramework-QE/api/json" 
-   ],
-   "USERNAME": "aculp" 
+   ]
 }
