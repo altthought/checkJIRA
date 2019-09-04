@@ -17,7 +17,7 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
     """
     jenkins_tickets = set()
     ticket_number = r'[\s-]?(\d+)' 
-    # regex pattern for tickets in form: 'HG 3323' / 'HG-3323' / 'Hg3323'
+    # regex pattern for tickets in form: 'JA 3323' / 'JA-3323' / 'Ja3323'
     jira_pattern = re.compile(jira_prefix + ticket_number, re.IGNORECASE)
     # go through jenkins jobs
     for jenkins_url in jenkins_urls:

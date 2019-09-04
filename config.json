@@ -1,12 +1,11 @@
 {
-   "JIRA_PROJECT"      : "HG", 
+   "JIRA_PROJECT"      : "JA", 
    "JIRA_TEMPLATE"     : "(reporter={u} or assignee={u} or verifier={u}) and project={project} and status=resolved",
-   "JIRA_URL_BASE"     : "https://resource.marketo.com/jira/rest/api/latest/search?jql=",
-   "JIRA_BROWSER_BASE" : "https://resource.marketo.com/jira/browse/",
-   "USERNAME": "aculp",
+   "JIRA_URL_BASE"     : "https://<SERVER_NAME>/jira/rest/api/latest/search?jql=",
+   "JIRA_BROWSER_BASE" : "https://<SERVER_NAME>/jira/browse/",
+   "USERNAME": "",
    
-   "JENKINS_URLS": [ 
-      "https://sjbuild2.marketo.org/view/Mercury/job/MercuryServer-QE/api/json",
-      "https://sjbuild2.marketo.org/view/Mercury/job/MercuryFramework-QE/api/json" 
+   "JENKINS_URLS": [  
+      "https://<JENKINS_CHANGELOG_PAGE>/api/json" 
    ]
 }
