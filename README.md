@@ -5,7 +5,7 @@
 
 Returns the **overlap** of:
    
-   - JIRA project tickets assigned to you
+   - JIRA project tickets assigned to you (QE tester)
    - JIRA project tickets mentioned as branch names in Jenkins build changelog
 
 ## Usage
@@ -28,6 +28,6 @@ password: <password>
 ## Limitations
 
 - if Jenkins server uses a self-signed SSL cert you must disable SSL checks
-- the HG ticket must be mentioned in a commit on that feature/bugfix branch
-   - `git commit -m 'JA-#### <commit description>'`
+- the ticket must be mentioned in a commit on that feature/bugfix branch
+   - i.e. dev performs `git commit -m 'JA-#### <commit description>'`
    - _Note: only needs to be mentioned in a single commit_
