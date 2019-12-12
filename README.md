@@ -15,12 +15,13 @@ for testing.
 However, for projects with multiple-hour long builds, it would be handy for QE to know whether the fix was already pulled
 onto a test environment in a previous build, to avoid having to rebuild on strained test hardware.
 
+Or more simply:
 
-Or more simply, this tool returns the **overlap** of:
-   
-   - JIRA project tickets assigned to you (QE tester)
-   - JIRA project tickets mentioned as branch names in Jenkins build changelog
+This tool returns the overlap of:
+   - Jenkins changelogs which contain ticket numbers in commit messages
+   - JIRA tickets which match some custom JQL query (i.e. `"project=JA AND assignee=me AND status=Resolved"`)
 
+All JIRA/Jenkins configuration is handled by the `config.json` file.
 
 ## Usage 
 
