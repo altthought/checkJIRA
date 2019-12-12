@@ -3,9 +3,9 @@
 
 ## Purpose
 
-QE finds a bug and reports it as JA-1234 and assigns it to a developer.
+QE finds a bug and reports it as `JA-1234` and assigns it to a developer.
 
-A developer working on a new bugfix, JA-1234, will create his initial commit like so: 
+A developer working on a new bugfix, `JA-1234`, will create his initial commit like so: 
 
 `git commit -m 'JA-1234: disallow embedded full-screen rickrolls'`
 
