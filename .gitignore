@@ -10,4 +10,4 @@ __pycache__/
 venv/
 
 # configuration
-config.toml
+config.json
