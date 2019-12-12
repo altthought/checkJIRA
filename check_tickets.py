@@ -43,7 +43,7 @@ def get_jenkins_tickets(jira_prefix, jenkins_urls):
                     sys.exit(1)
                 build_data = json.loads(r.text)
             except urllib3.exceptions.InsecureRequestWarning:
-                print('skipping',r.url)
+                print('Insecure build URL, check your certificate!', r.url)
             # need changelog count per build to search messages
             changelog_size = len(build_data['changeSet']['items'])
             # check each change for a JIRA ticket reference
@@ -77,9 +77,7 @@ def get_jira_tickets(url, user, pw):
         sys.exit(1) # connection error hangs 
 
 def main(): 
-    # warnings for internal self-signed certs are useless
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
+   
     # print all tickets we find on Jenkins & JIRA
     DEBUG_FLAG = sys.argv[-1] in ('--debug','-d')
 
